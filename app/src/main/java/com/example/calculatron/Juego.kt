@@ -1,0 +1,209 @@
+package com.example.calculatron
+
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.SharedPreferences
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.os.CountDownTimer
+import android.preference.PreferenceManager
+import android.view.View
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import java.util.Random
+
+class Juego : AppCompatActivity() {
+
+    var numeroint=0
+    var numero=""
+    var respuesta=true
+    var res=0
+    var numero1=0
+    var numero2=0
+    var operaciones=0
+    lateinit var resultadoant:TextView
+    lateinit var resultado:TextView
+    lateinit var resultadoprox:TextView
+    lateinit var tutext:TextView
+    lateinit var check:ImageView
+    var acertadas=0
+    var falladas=0
+    var acertadasesta=0
+    var falladasesta=0
+    lateinit var aciertos:TextView
+    var proxres=0
+    var temporizador:CountDownTimer?=null
+    lateinit var cuentatras:TextView
+    lateinit var sharedPreferences:SharedPreferences
+    lateinit var intent1 : Intent
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_juego)
+        resultadoant=findViewById(R.id.resultadoant)
+        resultado=findViewById(R.id.resultado)
+        resultadoprox=findViewById(R.id.resultadoprox)
+        tutext=findViewById(R.id.tutext)
+        check=findViewById(R.id.check)
+        aciertos=findViewById(R.id.resumen)
+        cuentatras=findViewById(R.id.cuentaAtras)
+
+        sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this)
+
+        numero1 = Random().nextInt(100)
+        numero2 = Random().nextInt(100)
+        operaciones = Random().nextInt(3)
+        if (operaciones == 0) {
+            resultado.text="$numero1 + $numero2"
+            res=numero1+numero2
+        }else if(operaciones==1){
+            resultado.text="$numero1 - $numero2"
+            res=numero1-numero2
+        }else if (operaciones==2){
+            resultado.text="$numero1 * $numero2"
+            res=numero1*numero2
+        }else if (operaciones==3){
+            resultado.text="$numero1 / $numero2"
+            res=numero1/numero2
+        }
+        operacion()
+        empezarTemporizador()
+        acertadas=sharedPreferences.getInt("aciertos",0)
+        falladas=sharedPreferences.getInt("fallos",0)
+        println(falladas)
+        println(falladasesta)
+    }
+
+    fun pulsado(view: View) {
+        when(view.id){
+            R.id.cero-> {
+                numero += "0"
+                tutext.text=numero
+            }
+            R.id.uno-> {
+                numero += "1"
+                tutext.text=numero
+            }
+            R.id.dos-> {
+                numero += "2"
+                tutext.text=numero
+            }
+            R.id.tres->{
+                numero+="3"
+                tutext.text=numero
+            }
+            R.id.cuatro-> {
+                numero += "4"
+                tutext.text=numero
+            }
+            R.id.cinco-> {
+                numero += "5"
+                tutext.text=numero
+            }
+            R.id.seis-> {
+                numero += "6"
+                tutext.text=numero
+            }
+            R.id.siete-> {
+                numero += "7"
+                tutext.text=numero
+            }
+            R.id.ocho-> {
+                numero += "8"
+                tutext.text=numero
+            }
+            R.id.nueve-> {
+                numero += "9"
+                tutext.text=numero
+            }
+            R.id.ce -> {
+                numeroint = 0
+                numero = ""
+                tutext.text=numero
+            }
+            R.id.c->{
+                numero=numero.substring(0,numero.length-1)
+                tutext.text=numero
+
+            }
+            R.id.igual->{
+                if (numero!="") {
+                    numeroint = numero.toInt()
+                    numero = ""
+                    tutext.text = numero
+                    respuesta = true
+                    resultadoant.text = resultado.text.toString()+" = $res"
+                    resultado.text = resultadoprox.text
+                    if (numeroint==res){
+                        check.setImageResource(R.drawable.check)
+                        acertadasesta++
+                        aciertos.text="Aciertos: $acertadasesta\nFallos: $falladasesta"
+                        res=proxres
+                    }else{
+                        check.setImageResource(R.drawable.wrong)
+                        falladasesta++
+                        aciertos.text="Aciertos: $acertadasesta\nFallos: $falladasesta"
+                        res=proxres
+                    }
+                    operacion()
+                }
+            }
+        }
+    }
+
+    fun operacion(){
+        if(respuesta) {
+            respuesta=false
+            numero1 = Random().nextInt(100)
+            numero2 = Random().nextInt(100)
+            var aux=0
+            if (numero1<numero2){
+                aux=numero1
+                numero1=numero2
+                numero2=aux
+            }
+            operaciones = Random().nextInt(4)
+            if (operaciones == 0) {
+                proxres=numero1+numero2
+                resultadoprox.text="$numero1 + $numero2"
+            }else if(operaciones==1){
+                proxres=numero1-numero2
+                resultadoprox.text="$numero1 - $numero2"
+            }else if (operaciones==2){
+                proxres=numero1*numero2
+                resultadoprox.text="$numero1 * $numero2"
+            }else if (operaciones==3){
+                proxres=numero1/numero2
+                resultadoprox.text="$numero1 / $numero2"
+            }
+            tutext.text=numero
+        }
+    }
+
+    fun empezarTemporizador(){
+        temporizador=object:CountDownTimer(60000,1000){
+            override fun onTick(millisUntilFinished: Long) {
+                cuentatras.text=(millisUntilFinished/1000).toString()
+            }
+
+            override fun onFinish() {
+                intent1 = Intent(applicationContext,Final::class.java)
+                acertadas+=acertadasesta
+                falladas+=falladasesta
+                sharedPreferences.edit().apply{
+                    putInt("aciertos",acertadas)
+                    putInt("fallos",falladas)
+                    apply()
+                }
+                intent1.putExtra("aciertosant",acertadasesta)
+                intent1.putExtra("fallosant",falladasesta)
+                startActivity(intent1)
+
+            }
+        }
+        temporizador?.start()
+    }
+
+
+}
