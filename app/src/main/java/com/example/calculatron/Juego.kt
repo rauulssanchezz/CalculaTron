@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import java.util.Random
 
 class Juego : AppCompatActivity() {
@@ -37,6 +38,13 @@ class Juego : AppCompatActivity() {
     lateinit var cuentatras:TextView
     lateinit var sharedPreferences:SharedPreferences
     lateinit var intent1 : Intent
+    var durcntatras=20
+    var valmin=0
+    var valmax=20
+    var sumas=true
+    var restas=true
+    var multiplicacion=true
+    var division=true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -203,6 +211,15 @@ class Juego : AppCompatActivity() {
             }
         }
         temporizador?.start()
+    }
+
+    fun ajustes(view: View) {
+        var ajustes=findViewById<CardView>(R.id.panelajustes)
+        if (ajustes.visibility==View.VISIBLE){
+            ajustes.visibility = View.GONE
+        }else {
+            ajustes.visibility = View.VISIBLE
+        }
     }
 
 

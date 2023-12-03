@@ -26,8 +26,124 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
         />
 
+    <ImageView
+        android:id="@+id/ajustes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/baseline_settings_24"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:onClick="ajustes"
+        />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/panelajustes"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cuentaAtras"
+        app:layout_constraintBottom_toTopOf="@id/fila1"
+        android:visibility="invisible"
+        android:orientation="vertical"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="100dp"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:cardCornerRadius="10dp"
+            android:orientation="vertical"
+            android:layout_margin="10dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="AJUSTES"
+                android:textSize="20sp"
+                android:layout_weight="1"
+                android:gravity="center"
+                />
+            <EditText
+                android:id="@+id/durcntatrs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Duración cuenta atrás"
+                android:layout_weight="1"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                >
+                <EditText
+                    android:id="@+id/valmin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Minimo"
+                    android:layout_weight="1"
+                    />
+                <EditText
+                    android:id="@+id/valmax"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Maximo"
+                    android:layout_weight="1"
+                    />
+
+            </LinearLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Operaciones seleccionadas:"
+                android:layout_weight="1"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+                <CheckBox
+                    android:id="@+id/sumas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:hint="Sumas"
+                    />
+                <CheckBox
+                    android:id="@+id/restas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:hint="Restas"
+                    />
+                <CheckBox
+                    android:id="@+id/multiplicaciones"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:hint="Multiplicaciones"
+                    />
+                <CheckBox
+                    android:id="@+id/divisiones"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:hint="Divisiones"
+                    />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
     <TextView
         android:id="@+id/resultadoant"
         android:layout_width="wrap_content"
@@ -36,6 +152,7 @@
         app:layout_constraintTop_toBottomOf="@id/cuentaAtras"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="50dp"
+        android:textSize="17sp"
         />
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
@@ -62,6 +179,7 @@
         app:layout_constraintTop_toBottomOf="@id/resultadoant"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp"
+        android:textSize="20sp"
         />
 
     <TextView
@@ -72,6 +190,7 @@
         app:layout_constraintTop_toBottomOf="@id/resultado"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="40dp"
+        android:textSize="17sp"
         />
 
     <TextView
