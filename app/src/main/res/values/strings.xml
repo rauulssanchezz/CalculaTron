@@ -2,4 +2,5 @@
     <string name="app_name">CalculaTron</string>
     <integer name="aciertos">0</integer>
     <integer name="fallos">0</integer>
+    <integer name="cuentaatras">20</integer>
 </resources>

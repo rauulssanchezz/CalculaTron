@@ -12,6 +12,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import com.google.android.material.textfield.TextInputEditText
+import java.lang.NumberFormatException
 import java.util.Random
 
 class Juego : AppCompatActivity() {
@@ -38,13 +40,15 @@ class Juego : AppCompatActivity() {
     lateinit var cuentatras:TextView
     lateinit var sharedPreferences:SharedPreferences
     lateinit var intent1 : Intent
-    var durcntatras=20
+    var durcntatras:Int=20*1000
     var valmin=0
     var valmax=20
     var sumas=true
     var restas=true
     var multiplicacion=true
     var division=true
+    var temppause=false
+    var tmprestante:Long=0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,8 +60,29 @@ class Juego : AppCompatActivity() {
         check=findViewById(R.id.check)
         aciertos=findViewById(R.id.resumen)
         cuentatras=findViewById(R.id.cuentaAtras)
+        var drcntras=findViewById<TextInputEditText>(R.id.durcntatrs)
 
         sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this)
+
+        //durcntatras=sharedPreferences.getInt("cuentaatras",20)
+
+        drcntras.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus){
+                try {
+                    if (!drcntras.text.isNullOrBlank() && drcntras.text.toString().toInt()!=0){
+                        durcntatras=drcntras.text.toString().toInt()
+                        sharedPreferences.edit().apply {
+                            putInt("cuentaatras",durcntatras)
+                            apply()
+                        }
+                    }
+                }catch (e:NumberFormatException){
+                    drcntras.error="Debes introducir un número"
+                }
+
+            }
+        }
+
 
         numero1 = Random().nextInt(100)
         numero2 = Random().nextInt(100)
@@ -76,7 +101,7 @@ class Juego : AppCompatActivity() {
             res=numero1/numero2
         }
         operacion()
-        empezarTemporizador()
+        empezarTemporizador(durcntatras)
         acertadas=sharedPreferences.getInt("aciertos",0)
         falladas=sharedPreferences.getInt("fallos",0)
         println(falladas)
@@ -189,24 +214,28 @@ class Juego : AppCompatActivity() {
         }
     }
 
-    fun empezarTemporizador(){
-        temporizador=object:CountDownTimer(60000,1000){
+    fun empezarTemporizador(tiempo:Int){
+        var duracion:Long=tiempo.toString().toLong()
+        temporizador=object:CountDownTimer(duracion,1000){
             override fun onTick(millisUntilFinished: Long) {
-                cuentatras.text=(millisUntilFinished/1000).toString()
+                cuentatras.text = (millisUntilFinished / 1000).toString()
+                tmprestante = millisUntilFinished
             }
 
             override fun onFinish() {
-                intent1 = Intent(applicationContext,Final::class.java)
-                acertadas+=acertadasesta
-                falladas+=falladasesta
-                sharedPreferences.edit().apply{
-                    putInt("aciertos",acertadas)
-                    putInt("fallos",falladas)
-                    apply()
+                if (!temppause) {
+                    intent1 = Intent(applicationContext, Final::class.java)
+                    acertadas += acertadasesta
+                    falladas += falladasesta
+                    sharedPreferences.edit().apply {
+                        putInt("aciertos", acertadas)
+                        putInt("fallos", falladas)
+                        apply()
+                    }
+                    intent1.putExtra("aciertosant", acertadasesta)
+                    intent1.putExtra("fallosant", falladasesta)
+                    startActivity(intent1)
                 }
-                intent1.putExtra("aciertosant",acertadasesta)
-                intent1.putExtra("fallosant",falladasesta)
-                startActivity(intent1)
 
             }
         }
@@ -217,8 +246,12 @@ class Juego : AppCompatActivity() {
         var ajustes=findViewById<CardView>(R.id.panelajustes)
         if (ajustes.visibility==View.VISIBLE){
             ajustes.visibility = View.GONE
+            empezarTemporizador(tmprestante.toString().toInt())
+            temppause=false
         }else {
             ajustes.visibility = View.VISIBLE
+            temppause=true
+            temporizador!!.cancel()
         }
     }
 
