@@ -1,25 +1,20 @@
 package com.example.calculatron
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
-import android.os.HandlerThread
-import android.preference.PreferenceManager
 import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.view.View
-import android.widget.Button
+import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.text.isDigitsOnly
 import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.textfield.TextInputEditText
-import java.lang.NumberFormatException
-import java.util.Random
+import kotlin.random.Random
 
 class Juego : AppCompatActivity() {
 
@@ -45,7 +40,7 @@ class Juego : AppCompatActivity() {
     lateinit var cuentatras:TextView
     lateinit var sharedPreferences:SharedPreferences
     lateinit var intent1 : Intent
-    var durcntatras:Int=0
+    var durcntatras:Long=0
     var valmin=0
     var valmax=20
     var sumas=true
@@ -66,45 +61,99 @@ class Juego : AppCompatActivity() {
         aciertos=findViewById(R.id.resumen)
         cuentatras=findViewById(R.id.cuentaAtras)
         var drcntras=findViewById<TextInputEditText>(R.id.durcntatrs)
+        var vlmin=findViewById<TextInputEditText>(R.id.valmin)
+        var vlmax=findViewById<TextInputEditText>(R.id.valmax)
+        var checksumas=findViewById<CheckBox>(R.id.sumas)
+        var checkrestas=findViewById<CheckBox>(R.id.restas)
+        var checkmultiplicaciones=findViewById<CheckBox>(R.id.multiplicaciones)
+        var checkdivisiones=findViewById<CheckBox>(R.id.divisiones)
 
         sharedPreferences= getDefaultSharedPreferences(this)
-        durcntatras=sharedPreferences.getInt("cuentaatras",20000)
+        durcntatras=sharedPreferences.getLong("cuentaatras",20000)
+        valmin=sharedPreferences.getInt("valmin",0)
+        valmax=sharedPreferences.getInt("valmax",20)
+        sumas=sharedPreferences.getBoolean("sumas",true)
+        restas=sharedPreferences.getBoolean("restas",true)
+        multiplicacion=sharedPreferences.getBoolean("multiplicaciones",true)
+        division=sharedPreferences.getBoolean("divisiones",true)
 
-        var handler= Handler()
+
+
 
         drcntras.doAfterTextChanged {
             if (!drcntras.text.isNullOrBlank()) {
                 if (!drcntras.text!!.isDigitsOnly()){
                     drcntras.error="Debes introducir un número entero"
                 }else{
-                    durcntatras=drcntras.text.toString().toInt()*1000
+                    durcntatras=drcntras.text.toString().toLong()*1000
                 }
             }
         }
 
+        vlmin.doAfterTextChanged {
+            if (!vlmin.text.isNullOrBlank()) {
+                if (!vlmin.text!!.isDigitsOnly()){
+                    vlmin.error="Debes introducir un número entero"
+                }else{
+                    valmin=vlmin.text.toString().toInt()
+                }
+            }
+        }
 
-        numero1 = Random().nextInt(100)
-        numero2 = Random().nextInt(100)
-        operaciones = Random().nextInt(3)
-        if (operaciones == 0) {
-            resultado.text="$numero1 + $numero2"
-            res=numero1+numero2
-        }else if(operaciones==1){
-            resultado.text="$numero1 - $numero2"
-            res=numero1-numero2
-        }else if (operaciones==2){
-            resultado.text="$numero1 * $numero2"
-            res=numero1*numero2
-        }else if (operaciones==3){
-            resultado.text="$numero1 / $numero2"
-            res=numero1/numero2
+        vlmax.doAfterTextChanged {
+            if (!vlmax.text.isNullOrBlank()) {
+                if (!vlmax.text!!.isDigitsOnly()){
+                    vlmax.error="Debes introducir un número entero"
+                }else{
+                    valmax=vlmax.text.toString().toInt()
+                }
+            }
+        }
+
+        if (sumas){
+            checksumas.isChecked=true
+        }
+        if (restas){
+            checkrestas.isChecked=true
+        }
+        if (multiplicacion){
+            checkmultiplicaciones.isChecked=true
+        }
+        if (division){
+            checkdivisiones.isChecked=true
+        }
+
+
+
+        numero1 = Random.nextInt(from = valmin, until = valmax)
+        numero2 = Random.nextInt(from = valmin, until = valmax)
+        var aux=0
+        if (numero1<numero2){
+            aux=numero1
+            numero1=numero2
+            numero2=aux
+        }
+        while (res==0) {
+            operaciones = Random.nextInt(3)
+            if (operaciones == 0 && sumas) {
+                resultado.text = "$numero1 + $numero2"
+                res = numero1 + numero2
+            } else if (operaciones == 1 && restas) {
+                resultado.text = "$numero1 - $numero2"
+                res = numero1 - numero2
+            } else if (operaciones == 2 && multiplicacion) {
+                resultado.text = "$numero1 * $numero2"
+                res = numero1 * numero2
+            } else if (operaciones == 3 && division) {
+                resultado.text = "$numero1 / $numero2"
+                res = numero1 / numero2
+            }
         }
         operacion()
         empezarTemporizador(durcntatras)
         acertadas=sharedPreferences.getInt("aciertos",0)
         falladas=sharedPreferences.getInt("fallos",0)
-        println(falladas)
-        println(falladasesta)
+
     }
 
     fun pulsado(view: View) {
@@ -185,37 +234,39 @@ class Juego : AppCompatActivity() {
     }
 
     fun operacion(){
+        proxres=0
         if(respuesta) {
             respuesta=false
-            numero1 = Random().nextInt(100)
-            numero2 = Random().nextInt(100)
+            numero1 = Random.nextInt(from = valmin, until = valmax)
+            numero2 = Random.nextInt(from = valmin, until = valmax)
             var aux=0
             if (numero1<numero2){
                 aux=numero1
                 numero1=numero2
                 numero2=aux
             }
-            operaciones = Random().nextInt(4)
-            if (operaciones == 0) {
-                proxres=numero1+numero2
-                resultadoprox.text="$numero1 + $numero2"
-            }else if(operaciones==1){
-                proxres=numero1-numero2
-                resultadoprox.text="$numero1 - $numero2"
-            }else if (operaciones==2){
-                proxres=numero1*numero2
-                resultadoprox.text="$numero1 * $numero2"
-            }else if (operaciones==3){
-                proxres=numero1/numero2
-                resultadoprox.text="$numero1 / $numero2"
+            while (proxres==0) {
+                operaciones = Random.nextInt(4)
+                if (operaciones == 0 && sumas) {
+                    proxres = numero1 + numero2
+                    resultadoprox.text = "$numero1 + $numero2"
+                } else if (operaciones == 1 && restas) {
+                    proxres = numero1 - numero2
+                    resultadoprox.text = "$numero1 - $numero2"
+                } else if (operaciones == 2 && multiplicacion) {
+                    proxres = numero1 * numero2
+                    resultadoprox.text = "$numero1 * $numero2"
+                } else if (operaciones == 3 && division) {
+                    proxres = numero1 / numero2
+                    resultadoprox.text = "$numero1 / $numero2"
+                }
             }
             tutext.text=numero
         }
     }
 
-    fun empezarTemporizador(tiempo:Int){
-        var duracion:Long=tiempo.toString().toLong()
-        temporizador=object:CountDownTimer(duracion,1000){
+    fun empezarTemporizador(tiempo:Long){
+        temporizador=object:CountDownTimer(tiempo,1000){
             override fun onTick(millisUntilFinished: Long) {
                 cuentatras.text = (millisUntilFinished / 1000).toString()
                 tmprestante = millisUntilFinished
@@ -245,7 +296,7 @@ class Juego : AppCompatActivity() {
         var ajustes=findViewById<CardView>(R.id.panelajustes)
         if (ajustes.visibility==View.VISIBLE){
             ajustes.visibility = View.GONE
-            empezarTemporizador(tmprestante.toString().toInt())
+            empezarTemporizador(tmprestante)
             temppause=false
         }else {
             ajustes.visibility = View.VISIBLE
@@ -256,10 +307,63 @@ class Juego : AppCompatActivity() {
 
     fun guardar(view: View) {
         sharedPreferences.edit().apply {
-            putInt("cuentaatras",durcntatras)
+            putLong("cuentaatras",durcntatras)
+            putInt("valmin",valmin)
+            putInt("valmax",valmax)
             apply()
         }
         recreate()
+
+    }
+
+    fun check(view: View) {
+        when(view.id){
+            R.id.sumas ->{
+                if (!sumas) {
+                    sumas = true
+                }else{
+                    sumas=false
+                }
+                sharedPreferences.edit().apply {
+                    putBoolean("sumas",sumas)
+                    apply()
+                }
+            }
+            R.id.restas ->{
+                if (!restas) {
+                    restas = true
+                }else{
+                    restas=false
+                }
+                sharedPreferences.edit().apply {
+                    putBoolean("restas",restas)
+                    apply()
+                }
+            }
+            R.id.multiplicaciones ->{
+                if (!multiplicacion) {
+                    multiplicacion = true
+                }else{
+                    multiplicacion=false
+                }
+                sharedPreferences.edit().apply {
+                    putBoolean("multiplicaciones",multiplicacion)
+                    apply()
+                }
+            }
+            R.id.divisiones ->{
+                if (!division) {
+                    division = true
+                }else{
+                    division=false
+                }
+                sharedPreferences.edit().apply {
+                    putBoolean("divisiones",division)
+                    apply()
+                }
+            }
+        }
+
     }
 
 

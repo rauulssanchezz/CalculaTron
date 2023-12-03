@@ -3,4 +3,10 @@
     <integer name="aciertos">0</integer>
     <integer name="fallos">0</integer>
     <integer name="cuentaatras">20000</integer>
+    <integer name="valmin">0</integer>
+    <integer name="valmax">20</integer>
+    <bool name="sumas">true</bool>
+    <bool name="restas">true</bool>
+    <bool name="multiplicaciones">true</bool>
+    <bool name="divisiones">true</bool>
 </resources>

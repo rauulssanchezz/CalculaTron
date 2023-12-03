@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Juego">
+    tools:context=".Juego"
+    android:background="@color/white"
+    >
 
     <TextView
         android:id="@+id/cuentaAtras"
@@ -116,6 +118,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:hint="Sumas"
+                    android:onClick="check"
                     />
                 <CheckBox
                     android:id="@+id/restas"
@@ -123,6 +126,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:hint="Restas"
+                    android:onClick="check"
                     />
                 <CheckBox
                     android:id="@+id/multiplicaciones"
@@ -130,6 +134,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:hint="Multiplicaciones"
+                    android:onClick="check"
                     />
                 <CheckBox
                     android:id="@+id/divisiones"
@@ -137,6 +142,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:hint="Divisiones"
+                    android:onClick="check"
                     />
             </LinearLayout>
             <LinearLayout
@@ -156,6 +162,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="@color/black"
                     android:textColor="@color/white"
+                    android:text="Guardar"
                     android:onClick="guardar"
                     />
             </LinearLayout>
