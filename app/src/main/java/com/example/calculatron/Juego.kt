@@ -6,12 +6,17 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.HandlerThread
 import android.preference.PreferenceManager
+import android.preference.PreferenceManager.getDefaultSharedPreferences
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
+import androidx.core.text.isDigitsOnly
+import androidx.core.widget.doAfterTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import java.lang.NumberFormatException
 import java.util.Random
@@ -40,7 +45,7 @@ class Juego : AppCompatActivity() {
     lateinit var cuentatras:TextView
     lateinit var sharedPreferences:SharedPreferences
     lateinit var intent1 : Intent
-    var durcntatras:Int=20*1000
+    var durcntatras:Int=0
     var valmin=0
     var valmax=20
     var sumas=true
@@ -62,24 +67,18 @@ class Juego : AppCompatActivity() {
         cuentatras=findViewById(R.id.cuentaAtras)
         var drcntras=findViewById<TextInputEditText>(R.id.durcntatrs)
 
-        sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this)
+        sharedPreferences= getDefaultSharedPreferences(this)
+        durcntatras=sharedPreferences.getInt("cuentaatras",20000)
 
-        //durcntatras=sharedPreferences.getInt("cuentaatras",20)
+        var handler= Handler()
 
-        drcntras.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus){
-                try {
-                    if (!drcntras.text.isNullOrBlank() && drcntras.text.toString().toInt()!=0){
-                        durcntatras=drcntras.text.toString().toInt()
-                        sharedPreferences.edit().apply {
-                            putInt("cuentaatras",durcntatras)
-                            apply()
-                        }
-                    }
-                }catch (e:NumberFormatException){
-                    drcntras.error="Debes introducir un número"
+        drcntras.doAfterTextChanged {
+            if (!drcntras.text.isNullOrBlank()) {
+                if (!drcntras.text!!.isDigitsOnly()){
+                    drcntras.error="Debes introducir un número entero"
+                }else{
+                    durcntatras=drcntras.text.toString().toInt()*1000
                 }
-
             }
         }
 
@@ -253,6 +252,14 @@ class Juego : AppCompatActivity() {
             temppause=true
             temporizador!!.cancel()
         }
+    }
+
+    fun guardar(view: View) {
+        sharedPreferences.edit().apply {
+            putInt("cuentaatras",durcntatras)
+            apply()
+        }
+        recreate()
     }
 
 
