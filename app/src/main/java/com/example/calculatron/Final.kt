@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.View
 import android.widget.TextView
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 class Final : AppCompatActivity() {
 
@@ -25,16 +27,16 @@ class Final : AppCompatActivity() {
         var txtaciertos=findViewById<TextView>(R.id.acertadas)
         var txtporcesta=findViewById<TextView>(R.id.porcentajeesta)
         var txtporc=findViewById<TextView>(R.id.porcentaje)
-        var porcentaje=aciertos/fallos*10
+        var porcentaje=aciertos.toDouble()/(fallos.toDouble()+aciertos.toDouble())*100
         var aciertosant=intent.getIntExtra("aciertosant",0)
         var fallosant=intent.getIntExtra("fallosant",0)
-        var porcentajeant=aciertosant/fallosant*10
+        var porcentajeant=aciertosant.toDouble()/(fallosant.toDouble()+aciertosant.toDouble())*100
         txtaciertosant.text="Aciertos: $aciertosant"
         txtfallosant.text="Fallos: $fallosant"
         txtaciertos.text="Aciertos: $aciertos"
         textfallos.text="Fallos: $fallos"
-        txtporcesta.text="Porcentaje de aciertos: $porcentajeant"
-        txtporc.text="Porcentaje de aciertos: $porcentaje"
+        txtporcesta.text="Porcentaje de aciertos: ${BigDecimal(porcentajeant).setScale(2, RoundingMode.HALF_EVEN)}%"
+        txtporc.text="Porcentaje de aciertos: ${BigDecimal(porcentaje).setScale(2, RoundingMode.HALF_EVEN)}%"
 
     }
 

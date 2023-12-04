@@ -158,7 +158,7 @@ class Juego : AppCompatActivity() {
             } else if (operaciones == 2 && multiplicacion) {
                 resultado.text = "$numero1 * $numero2"
                 res = numero1 * numero2
-            } else if (operaciones == 3 && division) {
+            } else if (operaciones == 3 && division && numero2==0) {
                 resultado.text = "$numero1 / $numero2"
                 res = numero1 / numero2
             }
@@ -230,13 +230,14 @@ class Juego : AppCompatActivity() {
                 }
 
                 R.id.c -> {
-                    numero = numero.substring(0, numero.length - 1)
-                    tutext.text = numero
-
+                    if (!numero.equals("") || !numero.isNullOrBlank()) {
+                        numero = numero.substring(0, numero.length - 1)
+                        tutext.text = numero
+                    }
                 }
 
                 R.id.igual -> {
-                    if (numero != "") {
+                    if (numero != "" || !numero.isNullOrBlank()) {
                         numeroint = numero.toInt()
                         numero = ""
                         tutext.text = numero
@@ -284,7 +285,7 @@ class Juego : AppCompatActivity() {
                 } else if (operaciones == 2 && multiplicacion) {
                     proxres = numero1 * numero2
                     resultadoprox.text = "$numero1 * $numero2"
-                } else if (operaciones == 3 && division) {
+                } else if (operaciones == 3 && division && numero2==0) {
                     proxres = numero1 / numero2
                     resultadoprox.text = "$numero1 / $numero2"
                 }
