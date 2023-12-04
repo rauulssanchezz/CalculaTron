@@ -9,4 +9,5 @@
     <bool name="restas">true</bool>
     <bool name="multiplicaciones">true</bool>
     <bool name="divisiones">true</bool>
+    <integer name="porcentaje">0</integer>
 </resources>

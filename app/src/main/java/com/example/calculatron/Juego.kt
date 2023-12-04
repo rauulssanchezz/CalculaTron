@@ -49,6 +49,7 @@ class Juego : AppCompatActivity() {
     var division=true
     var temppause=false
     var tmprestante:Long=0
+    var ajustesact=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,20 +96,33 @@ class Juego : AppCompatActivity() {
                 if (!vlmin.text!!.isDigitsOnly()){
                     vlmin.error="Debes introducir un número entero"
                 }else{
-                    valmin=vlmin.text.toString().toInt()
+                    val valorIngresado = vlmin.text.toString().toInt()
+
+                    if (valorIngresado == 0) {
+                        vlmin.error="Debe ser mayor de 0"
+                    }else {
+                        valmin = vlmin.text.toString().toInt()
+                    }
                 }
             }
         }
 
         vlmax.doAfterTextChanged {
             if (!vlmax.text.isNullOrBlank()) {
-                if (!vlmax.text!!.isDigitsOnly()){
-                    vlmax.error="Debes introducir un número entero"
-                }else{
-                    valmax=vlmax.text.toString().toInt()
+                if (!vlmax.text!!.isDigitsOnly()) {
+                    vlmax.error = "Debes introducir un número entero"
+                } else {
+                    val valorIngresado = vlmax.text.toString().toInt()
+
+                    if (valorIngresado == 0) {
+                        vlmax.error = "Debe ser mayor de 0"
+                    } else {
+                        valmax = valorIngresado + 1
+                    }
                 }
             }
         }
+
 
         if (sumas){
             checksumas.isChecked=true
@@ -157,77 +171,91 @@ class Juego : AppCompatActivity() {
     }
 
     fun pulsado(view: View) {
-        when(view.id){
-            R.id.cero-> {
-                numero += "0"
-                tutext.text=numero
-            }
-            R.id.uno-> {
-                numero += "1"
-                tutext.text=numero
-            }
-            R.id.dos-> {
-                numero += "2"
-                tutext.text=numero
-            }
-            R.id.tres->{
-                numero+="3"
-                tutext.text=numero
-            }
-            R.id.cuatro-> {
-                numero += "4"
-                tutext.text=numero
-            }
-            R.id.cinco-> {
-                numero += "5"
-                tutext.text=numero
-            }
-            R.id.seis-> {
-                numero += "6"
-                tutext.text=numero
-            }
-            R.id.siete-> {
-                numero += "7"
-                tutext.text=numero
-            }
-            R.id.ocho-> {
-                numero += "8"
-                tutext.text=numero
-            }
-            R.id.nueve-> {
-                numero += "9"
-                tutext.text=numero
-            }
-            R.id.ce -> {
-                numeroint = 0
-                numero = ""
-                tutext.text=numero
-            }
-            R.id.c->{
-                numero=numero.substring(0,numero.length-1)
-                tutext.text=numero
+        if (!ajustesact) {
+            when (view.id) {
+                R.id.cero -> {
+                    numero += "0"
+                    tutext.text = numero
+                }
 
-            }
-            R.id.igual->{
-                if (numero!="") {
-                    numeroint = numero.toInt()
+                R.id.uno -> {
+                    numero += "1"
+                    tutext.text = numero
+                }
+
+                R.id.dos -> {
+                    numero += "2"
+                    tutext.text = numero
+                }
+
+                R.id.tres -> {
+                    numero += "3"
+                    tutext.text = numero
+                }
+
+                R.id.cuatro -> {
+                    numero += "4"
+                    tutext.text = numero
+                }
+
+                R.id.cinco -> {
+                    numero += "5"
+                    tutext.text = numero
+                }
+
+                R.id.seis -> {
+                    numero += "6"
+                    tutext.text = numero
+                }
+
+                R.id.siete -> {
+                    numero += "7"
+                    tutext.text = numero
+                }
+
+                R.id.ocho -> {
+                    numero += "8"
+                    tutext.text = numero
+                }
+
+                R.id.nueve -> {
+                    numero += "9"
+                    tutext.text = numero
+                }
+
+                R.id.ce -> {
+                    numeroint = 0
                     numero = ""
                     tutext.text = numero
-                    respuesta = true
-                    resultadoant.text = resultado.text.toString()+" = $res"
-                    resultado.text = resultadoprox.text
-                    if (numeroint==res){
-                        check.setImageResource(R.drawable.check)
-                        acertadasesta++
-                        aciertos.text="Aciertos: $acertadasesta\nFallos: $falladasesta"
-                        res=proxres
-                    }else{
-                        check.setImageResource(R.drawable.wrong)
-                        falladasesta++
-                        aciertos.text="Aciertos: $acertadasesta\nFallos: $falladasesta"
-                        res=proxres
+                }
+
+                R.id.c -> {
+                    numero = numero.substring(0, numero.length - 1)
+                    tutext.text = numero
+
+                }
+
+                R.id.igual -> {
+                    if (numero != "") {
+                        numeroint = numero.toInt()
+                        numero = ""
+                        tutext.text = numero
+                        respuesta = true
+                        resultadoant.text = resultado.text.toString() + " = $res"
+                        resultado.text = resultadoprox.text
+                        if (numeroint == res) {
+                            check.setImageResource(R.drawable.check)
+                            acertadasesta++
+                            aciertos.text = "Aciertos: $acertadasesta\nFallos: $falladasesta"
+                            res = proxres
+                        } else {
+                            check.setImageResource(R.drawable.wrong)
+                            falladasesta++
+                            aciertos.text = "Aciertos: $acertadasesta\nFallos: $falladasesta"
+                            res = proxres
+                        }
+                        operacion()
                     }
-                    operacion()
                 }
             }
         }
@@ -294,14 +322,32 @@ class Juego : AppCompatActivity() {
 
     fun ajustes(view: View) {
         var ajustes=findViewById<CardView>(R.id.panelajustes)
+        animacion(view,0.9f,1.0f,100)
         if (ajustes.visibility==View.VISIBLE){
             ajustes.visibility = View.GONE
             empezarTemporizador(tmprestante)
             temppause=false
+            ajustesact=false
         }else {
+            animacion(ajustes,1.0f,0.95f,100)
             ajustes.visibility = View.VISIBLE
+            ajustesact=true
             temppause=true
             temporizador!!.cancel()
+        }
+    }
+
+    fun animacion(view: View, tamñoX:Float,tamñoY:Float,duracion:Int){
+        view.animate().apply {
+            scaleX(tamñoX)
+            scaleY(tamñoX)
+            duration=100
+        }.withEndAction{
+            view.animate().apply {
+                scaleX(tamñoY)
+                scaleY(tamñoY)
+                duration=100
+            }
         }
     }
 
@@ -310,6 +356,10 @@ class Juego : AppCompatActivity() {
             putLong("cuentaatras",durcntatras)
             putInt("valmin",valmin)
             putInt("valmax",valmax)
+            putBoolean("sumas",sumas)
+            putBoolean("restas",restas)
+            putBoolean("multiplicaciones",multiplicacion)
+            putBoolean("divisiones",division)
             apply()
         }
         recreate()
@@ -324,10 +374,7 @@ class Juego : AppCompatActivity() {
                 }else{
                     sumas=false
                 }
-                sharedPreferences.edit().apply {
-                    putBoolean("sumas",sumas)
-                    apply()
-                }
+
             }
             R.id.restas ->{
                 if (!restas) {
@@ -335,10 +382,7 @@ class Juego : AppCompatActivity() {
                 }else{
                     restas=false
                 }
-                sharedPreferences.edit().apply {
-                    putBoolean("restas",restas)
-                    apply()
-                }
+
             }
             R.id.multiplicaciones ->{
                 if (!multiplicacion) {
@@ -346,10 +390,7 @@ class Juego : AppCompatActivity() {
                 }else{
                     multiplicacion=false
                 }
-                sharedPreferences.edit().apply {
-                    putBoolean("multiplicaciones",multiplicacion)
-                    apply()
-                }
+
             }
             R.id.divisiones ->{
                 if (!division) {
@@ -357,10 +398,7 @@ class Juego : AppCompatActivity() {
                 }else{
                     division=false
                 }
-                sharedPreferences.edit().apply {
-                    putBoolean("divisiones",division)
-                    apply()
-                }
+
             }
         }
 
