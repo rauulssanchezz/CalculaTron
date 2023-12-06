@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transblack">#B2141313</color>
     <color name="transwhite">#9FFFFFFF</color>
+    <color name="yellow">#F0AA3A</color>
 </resources>
