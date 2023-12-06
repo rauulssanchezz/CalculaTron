@@ -302,7 +302,7 @@ class Juego : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 cuentatras.text = (millisUntilFinished / 1000).toString()
                 tmprestante = millisUntilFinished
-                if (tmprestante<5000){
+                if (tmprestante<=5000){
                     animacion(cuentatras,1.0f,0.9f,100)
                 }
             }
