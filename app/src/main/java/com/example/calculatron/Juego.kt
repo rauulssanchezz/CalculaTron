@@ -244,6 +244,9 @@ class Juego : AppCompatActivity() {
                         respuesta = true
                         resultadoant.text = resultado.text.toString() + " = $res"
                         resultado.text = resultadoprox.text
+                        animacion(resultado,0.9f,1.0f,100)
+                        animacion(resultadoant,0.9f,1.0f,100)
+                        animacion(resultadoprox,0.9f,1.0f,100)
                         if (numeroint == res) {
                             check.setImageResource(R.drawable.check)
                             acertadasesta++
@@ -299,6 +302,9 @@ class Juego : AppCompatActivity() {
             override fun onTick(millisUntilFinished: Long) {
                 cuentatras.text = (millisUntilFinished / 1000).toString()
                 tmprestante = millisUntilFinished
+                if (tmprestante<5000){
+                    animacion(cuentatras,1.0f,0.9f,100)
+                }
             }
 
             override fun onFinish() {
@@ -311,8 +317,10 @@ class Juego : AppCompatActivity() {
                         putInt("fallos", falladas)
                         apply()
                     }
-                    intent1.putExtra("aciertosant", acertadasesta)
-                    intent1.putExtra("fallosant", falladasesta)
+                    if (acertadasesta!=0 || falladasesta!=0) {
+                        intent1.putExtra("aciertosant", acertadasesta)
+                        intent1.putExtra("fallosant", falladasesta)
+                    }
                     startActivity(intent1)
                 }
 
@@ -338,16 +346,16 @@ class Juego : AppCompatActivity() {
         }
     }
 
-    fun animacion(view: View, tamñoX:Float,tamñoY:Float,duracion:Int){
+    fun animacion(view: View, tamñoX:Float,tamñoY:Float,duracion:Long){
         view.animate().apply {
             scaleX(tamñoX)
             scaleY(tamñoX)
-            duration=100
+            duration=duracion
         }.withEndAction{
             view.animate().apply {
                 scaleX(tamñoY)
                 scaleY(tamñoY)
-                duration=100
+                duration=duracion
             }
         }
     }
