@@ -137,6 +137,12 @@ class Juego : AppCompatActivity() {
             checkdivisiones.isChecked=true
         }
 
+        if (!checksumas.isChecked && !checkrestas.isChecked && !checkmultiplicaciones.isChecked && !checkdivisiones.isChecked){
+            sumas=true
+            restas=true
+            checksumas.isChecked=true
+            checkrestas.isChecked=true
+        }
 
 
         numero1 = Random.nextInt(from = valmin, until = valmax)
