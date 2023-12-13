@@ -21,6 +21,7 @@ class Final : AppCompatActivity() {
         sharedPreferences=PreferenceManager.getDefaultSharedPreferences(this)
         var aciertos=sharedPreferences.getInt("aciertos",0)
         var fallos=sharedPreferences.getInt("fallos",0)
+
         var txtaciertosant=findViewById<TextView>(R.id.acertadasesta)
         var txtfallosant=findViewById<TextView>(R.id.falladasesta)
         var textfallos=findViewById<TextView>(R.id.falladas)

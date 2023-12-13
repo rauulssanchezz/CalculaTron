@@ -61,6 +61,7 @@ class Juego : AppCompatActivity() {
         check=findViewById(R.id.check)
         aciertos=findViewById(R.id.resumen)
         cuentatras=findViewById(R.id.cuentaAtras)
+
         var drcntras=findViewById<TextInputEditText>(R.id.durcntatrs)
         var vlmin=findViewById<TextInputEditText>(R.id.valmin)
         var vlmax=findViewById<TextInputEditText>(R.id.valmax)
